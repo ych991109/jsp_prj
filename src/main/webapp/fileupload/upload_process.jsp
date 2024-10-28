@@ -1,6 +1,8 @@
+<%@page import="java.io.File"%>
+<%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    info=""%>
+    info="multipart/form-data인 경우 web parameter가 전달되지 않는다."%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -30,8 +32,16 @@ $(function(){
 </head>
 <body>
 <div id="wrap">
+<%-- 
+web parameter가 전달되지 않는다.
+업로더<%= request.getParameter("uploader")  %><br>
+EL : ${ param.uploader }<br> --%>
+요청방식 : <%= request.getMethod() %><br>
+<%
+File file=new File("C:/dev/workspace/jsp_prj/src/main/webapp/upload");
 
-asdfasdfasf
+%>
+
 </div>
 </body>
 </html>

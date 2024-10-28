@@ -23,15 +23,39 @@
 </style>
 <script type="text/javascript">
 $(function(){
-
+	$("#btn").click(function() {
+		chkNull();
+	})
 });//ready
+
+function chkNull() {
+	if($("#uploader").val() == ""){
+		alert("업로더는 필수 입력");
+		$("#uploader").focus();
+		return;
+	}//end if
+	
+	if($("#upfile").val() == ""){
+		alert("업로드 파일은 필수 입력");
+		return;
+	}//end if
+
+	$("#frm").submit();
+}
 
 </script>
 </head>
 <body>
 <div id="wrap">
+<!-- 웹 파라메터 전송방식에서 file 전송방식으로 변경 -->
+<form action="upload_process.jsp" method="post" id="frm" name="frm" enctype="multipart/form-data">
+<label>업로더</label>
+<input type="text" name="uploader" id="uploader" /><br>
+<label>파일</label>
+<input type="file" name="upfile" id="upfile" /><br>
+<input type="submit" value="업로드" id="btn" class="btn btn-primary btn-sm" />
 
-asdfasdfasf
+</form>
 </div>
 </body>
 </html>
