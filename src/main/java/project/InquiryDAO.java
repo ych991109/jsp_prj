@@ -86,4 +86,80 @@ public class InquiryDAO {
 
         return inquiries;
     }
+
+    public void deleteInquiry(String inquiryId) throws SQLException {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        String DELETE_INQUIRY_SQL = "DELETE FROM inquiries WHERE id = ?";
+
+        try {
+            DbConnection dbCon = DbConnection.getInstance();
+            con = dbCon.getConn();
+            pstmt = con.prepareStatement(DELETE_INQUIRY_SQL);
+            pstmt.setInt(1, Integer.parseInt(inquiryId)); // inquiryId를 정수로 변환하여 설정
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        }
+    }
+
+    public InquiryVO getInquiryById(String id) throws SQLException {
+        InquiryVO inquiry = null;
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            DbConnection dbCon = DbConnection.getInstance();
+            con = dbCon.getConn();
+            String query = "SELECT * FROM inquiries WHERE id = ?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(id)); // id를 Integer로 변환하여 설정
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                inquiry = new InquiryVO();
+                inquiry.setId(rs.getInt("id"));
+                inquiry.setType(rs.getString("type"));
+                inquiry.setUsagePath(rs.getString("usagePath"));
+                inquiry.setVisitDate(rs.getString("visitDate"));
+                inquiry.setNotification(rs.getString("notification"));
+                inquiry.setName(rs.getString("name"));
+                inquiry.setPhone(rs.getString("phone"));
+                inquiry.setEmail(rs.getString("email"));
+                inquiry.setTitle(rs.getString("title"));
+                inquiry.setContent(rs.getString("content"));
+                inquiry.setInput_date(rs.getDate("input_date"));
+                inquiry.setStatus(rs.getString("status"));
+            }
+        } finally {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        }
+
+        return inquiry;
+    }
+
+    public void updateInquiry(InquiryVO inquiry) throws SQLException {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        String UPDATE_INQUIRY_SQL = "UPDATE inquiries SET type = ?, title = ?, content = ? WHERE id = ?";
+
+        try {
+            DbConnection dbCon = DbConnection.getInstance();
+            con = dbCon.getConn();
+            pstmt = con.prepareStatement(UPDATE_INQUIRY_SQL);
+            pstmt.setString(1, inquiry.getType());
+            pstmt.setString(2, inquiry.getTitle());
+            pstmt.setString(3, inquiry.getContent());
+            pstmt.setInt(4, inquiry.getId());
+
+            pstmt.executeUpdate();
+        } finally {
+            if (pstmt != null) pstmt.close();
+            if (con != null) con.close();
+        }
+    }
 }

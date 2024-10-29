@@ -13,31 +13,21 @@
             padding: 0;
             background-color: #f5f5f5;
             color: #333;
-        }
-        #wrap {
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        #content-wrap {
-            flex: 1;
-            padding: 20px;
-        }
-        .sub_visual {
-            background-image: url('path/to/your/image.jpg'); /* 배경 이미지 경로 */
-            background-size: cover;
-            background-position: center;
-            padding: 60px 0;
-            text-align: center;
-            color: black;
-        }
-        .cart-container {
+        .container {
             width: 600px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
         }
         .cart-item {
             border: 1px solid #ddd;
@@ -74,13 +64,28 @@
             width: 300px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+        .modal-image {
+            width: 40%;
+            margin-bottom: 15px;
+            margin-left: 100px;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .quantity-controls button {
+            font-size: 14px;
+            padding: 5px 8px;
+            margin: 0 5px;
+        }
         .total {
             text-align: center;
             font-size: 20px;
             margin-top: 20px;
-            color: #000;
+            color: #000000;
         }
-        .cart-button {
+        button {
             background-color: #45a049;
             color: white;
             border: none;
@@ -89,7 +94,7 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .cart-button:hover {
+        button:hover {
             background-color: #388e3c;
         }
         #empty-message {
@@ -137,13 +142,13 @@
                             <span>${item.name} - ${item.price.toLocaleString()} 원</span>
                             ${optionsDisplay ? optionsDisplay : ''}
                             <div class="quantity-controls">
-                                <button class="cart-button" onclick="changeQuantity(${item.id}, -1)">-</button>
+                                <button onclick="changeQuantity(${item.id}, -1)">-</button>
                                 <span>${item.quantity != null ? item.quantity : 1}</span>
-                                <button class="cart-button" onclick="changeQuantity(${item.id}, 1)">+</button>
+                                <button onclick="changeQuantity(${item.id}, 1)">+</button>
                             </div>
                             <span>${itemTotal} 원</span>
-                            <button class="cart-button" onclick="showOptions(${item.id})">상세보기</button>
-                            <button class="cart-button" onclick="removeFromCart(${item.id})">삭제</button>
+                            <button onclick="showOptions(${item.id})">상세보기</button>
+                            <button onclick="removeFromCart(${item.id})">삭제</button>
                         </div>
                     `;
                     cartList.appendChild(listItem);
@@ -180,6 +185,7 @@
                     document.getElementById("icecream-options").style.display = "none";
                 }
 
+                // 기본값 설정
                 document.querySelector(`input[name="size"][value="${selectedOptions.size || 'M'}"]`).checked = true;
                 document.querySelector(`input[name="cup"][value="${selectedOptions.cup || '일회용컵'}"]`).checked = true;
                 document.querySelector(`input[name="shot"]`).checked = selectedOptions.shot || false;
@@ -226,12 +232,14 @@
 
         function completePayment() {
             if (cart.length === 0) {
-                alert("장바구니가 비어 있습니다.");
+                alert("장바구니가 비어있습니다. 상품을 담아주세요.");
                 return;
             }
-            const orderId = Date.now();
-            const orderDate = new Date().toLocaleString();
-            const confirmation = confirm("주문을 완료하시겠습니까? 확인을 누르면 주문 내역으로 이동합니다.");
+
+            const orderId = new Date().getTime();
+            const orderDate = new Date().toLocaleDateString();
+
+            const confirmation = confirm("결제가 완료되었습니다! 확인을 누르면 주문 내역으로 이동합니다.");
 
             if (confirmation) {
                 const orderDetails = {
@@ -239,8 +247,15 @@
                     orderDate: orderDate,
                     items: cart
                 };
-                // 결제 처리 로직...
-                alert(`주문이 완료되었습니다! 주문 ID: ${orderId}, 주문 날짜: ${orderDate}`);
+
+                const previousOrders = JSON.parse(localStorage.getItem("orders")) || [];
+                previousOrders.push(orderDetails);
+
+                localStorage.setItem("orders", JSON.stringify(previousOrders));
+                localStorage.setItem("lastOrderId", orderId);
+
+                localStorage.removeItem("cart");
+                window.location.href = "orderList.html";
             }
         }
 
@@ -248,60 +263,46 @@
     </script>
 </head>
 <body>
-    <div id="wrap">
-        <div id="header">
-            <jsp:include page="header.jsp"/>
-        </div>
+    <div class="container">
+        <h1>장바구니</h1>
+        <div id="cart-list"></div>
+        <div id="empty-message" style="display: none;">담긴 상품이 없습니다.</div>
+        <h2 class="total">총 합계: <span id="total-amount">0 원</span></h2>
+        <button onclick="completePayment()">결제하기</button>
 
-        <div id="content-wrap">
-            <div class="sub_visual bg-paik">
-                <div class="txt">
-                    <h1>장바구니</h1>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span onclick="closeModal()" style="cursor:pointer; float:right;">&times;</span>
+                <img id="modalImage" class="modal-image" src="" alt="상품 이미지">
+                <h2 id="selectedProduct">상품</h2>
+                <form id="optionsForm">
+                    <div id="coffee-options">
+                        <h3>사이즈 선택</h3>
+                        <label><input type="radio" name="size" value="S"> S</label><br>
+                        <label><input type="radio" name="size" value="M" checked> M</label><br>
+                        <label><input type="radio" name="size" value="L"> L</label><br>
+
+                        <h3>컵 선택</h3>
+                        <label><input type="radio" name="cup" value="일회용컵" checked> 일회용 컵 사용</label><br>
+                        <label><input type="radio" name="cup" value="다회용컵"> 다회용 컵 사용</label><br>
+
+                        <h3>샷 추가</h3>
+                        <label><input type="checkbox" name="shot"> 에스프레소 샷 추가</label><br>
+
+                        <h3>시럽 추가</h3>
+                        <label><input type="checkbox" name="syrup"> 시럽 추가</label><br>
+                    </div>
+                    <div id="icecream-options" style="display: none;">
+                        <h3>토핑 추가</h3>
+                        <label><input type="checkbox" name="choco"> 초코 추가</label><br>
+                        <label><input type="checkbox" name="strawberry"> 딸기 추가</label><br>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button onclick="closeModal()">취소</button>
+                    <button onclick="submitOptions()">적용</button>
                 </div>
             </div>
-
-            <div class="cart-container">
-                <div id="cart-list"></div>
-                <div id="empty-message" style="display: none;">담긴 상품이 없습니다.</div>
-                <h2 class="total">총 합계: <span id="total-amount">0 원</span></h2>
-                <button class="cart-button" onclick="completePayment()">결제하기</button>
-            </div>
-        </div>
-
-        <div id="footer">
-            <jsp:include page="footer.jsp"/>
-        </div>
-    </div>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span onclick="closeModal()" style="float:right;cursor:pointer;">&times;</span>
-            <h2 id="selectedProduct"></h2>
-            <img id="modalImage" src="" alt="" style="width: 100%; border-radius: 5px;">
-            <form name="optionsForm">
-                <div id="icecream-options" style="display: none;">
-                    <label><input type="checkbox" name="choco"> 초코 추가</label><br>
-                    <label><input type="checkbox" name="strawberry"> 딸기 추가</label><br>
-                </div>
-                <div id="coffee-options" style="display: none;">
-                    <label>사이즈:
-                        <select name="size">
-                            <option value="S">S</option>
-                            <option value="M" selected>M</option>
-                            <option value="L">L</option>
-                        </select>
-                    </label><br>
-                    <label>컵:
-                        <select name="cup">
-                            <option value="일회용컵">일회용컵</option>
-                            <option value="머그컵">머그컵</option>
-                        </select>
-                    </label><br>
-                    <label><input type="checkbox" name="shot"> 샷 추가</label><br>
-                    <label><input type="checkbox" name="syrup"> 시럽 추가</label><br>
-                </div>
-                <button type="button" class="cart-button" onclick="submitOptions()">확인</button>
-            </form>
         </div>
     </div>
 </body>

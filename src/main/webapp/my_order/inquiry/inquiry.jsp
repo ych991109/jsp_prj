@@ -19,23 +19,23 @@
             background-color: #f0f0f0;
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            margin: 0; /* 기본 마진 제거 */
+            margin: 0;
         }
         #wrap {
-            padding-top: 30px; /* 상단 여백 추가 */
+            padding-top: 30px;
         }
         .sub_visual {
-            background-image: url('http://localhost/paik_prj/common/images/your-background-image.jpg'); /* 배경 이미지 URL */
+            background-image: url('http://localhost/paik_prj/common/images/your-background-image.jpg');
             background-size: cover;
             background-position: center;
-            padding: 60px 0; /* 패딩 추가 */
+            padding: 60px 0;
             text-align: center;
-            color: white; /* 텍스트 색상 */
+            color: white;
         }
         .form-container {
-            max-width: 900px; /* 너비 증가 */
+            max-width: 900px;
             margin: 30px auto;
-            padding: 30px; /* 패딩 증가 */
+            padding: 30px;
             border: 1px solid #ccc;
             border-radius: 10px;
             background-color: #ffffff;
@@ -51,8 +51,12 @@
         }
         .submit-button {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* 가운데 정렬 */
             margin-top: 20px;
+        }
+        .btn {
+            width: 150px; /* 동일한 크기 유지 */
+            margin: 0 10px; /* 버튼 간격 */
         }
         .agreement {
             max-height: 150px;
@@ -71,10 +75,18 @@
         }
     </style>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+
     <script>
         $(function() {
             $("#visitDate").datepicker({
                 dateFormat: "yy-mm-dd"
+            });
+
+            $("#visitDate").on("click", function() {
+                $(this).datepicker("show");
             });
 
             $('#emailDomain').change(function() {
@@ -104,8 +116,10 @@
             inquiries.push(inquiry);
             localStorage.setItem('inquiries', JSON.stringify(inquiries));
 
-            window.location.href = 'inquiry_list.jsp';
+            // 문의 내역 페이지로 리다이렉트
+            window.location.href = 'inquiry_list.jsp'; // 여기서 문의 내역 페이지의 경로를 설정
         }
+
     </script>
 
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -128,7 +142,7 @@
         <div class="container">
             <div class="form-container">
                 <h2 class="text-center mb-4">고객의 소리</h2>
-                <form id="inquiryForm" onsubmit="return validatePasswords();">
+                <form id="inquiryForm" onsubmit="submitForm(event);">
                     <div class="form-group">
                         <label for="inquiryType">문의 유형</label>
                         <select class="form-control" id="inquiryType" name="inquiryType" required>
@@ -158,7 +172,7 @@
 
                     <div class="form-group">
                         <label for="visitDate">방문일</label>
-                        <input type="date" class="form-control" id="visitDate" name="visitDate" required>
+                        <input type="text" class="form-control" id="visitDate" name="visitDate" required placeholder="방문일 선택" readonly>
                     </div>
 
                     <div class="section-divider"></div>
@@ -257,7 +271,6 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

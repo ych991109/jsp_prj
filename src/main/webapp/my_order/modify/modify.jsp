@@ -67,7 +67,7 @@
         button {
             cursor: pointer;
             background-color: #FFE800;
-            color: #FFFFFF;
+            color: black; /* 버튼 글씨 색상 변경 */
             border: none;
             height: 50px;
             width: 48%;
