@@ -1,110 +1,139 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" info="사용자 수정화면"%>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko-KR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>장바구니</title>
-    <link rel="shortcut icon" href="http://192.168.10.216/html_prj/common/images/favicon.ico"/>
-    <style type="text/css">
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 600px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .cart-item {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .item-image {
-            width: 100px;
-            height: auto;
-            margin-right: 10px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .modal-image {
-            width: 40%;
-            margin-bottom: 15px;
-            margin-left: 100px;
-        }
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-        .quantity-controls button {
-            font-size: 14px;
-            padding: 5px 8px;
-            margin: 0 5px;
-        }
-        .total {
-            text-align: center;
-            font-size: 20px;
-            margin-top: 20px;
-            color: #000000;
-        }
-        button {
-            background-color: #45a049;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #388e3c;
-        }
-        #empty-message {
-            text-align: center;
-            font-size: 16px;
-            color: #999;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script>
+<link rel="shortcut icon" type="image/x-icon"
+	href="http://localhost/paik_prj/common/images/favicon.png">
+<link rel="stylesheet"
+	href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<link rel="stylesheet" type="text/css"
+	href="http://localhost/paik_prj/common/css/paik_kl.css">
+<link rel="stylesheet" type="text/css"
+	href="http://localhost/paik_prj/common/css/paik_normal.css">
+<link rel="stylesheet" type="text/css"
+	href="http://localhost/paik_prj/common/css/paik_extend.css">
+<link rel='stylesheet'
+	href='https://paikdabang.com/wp-content/themes/paikdabang/assets/css/style.css?ver=4.9.4'
+	type='text/css' media='all' />
+
+<title>빽다방 | 장바구니</title>
+
+<style type="text/css">
+body {
+	background-color: #f0f0f0;
+	font-family: 'Arial', sans-serif;
+	line-height: 1.6;
+	margin: 0;
+}
+
+.cart_container {
+	max-width: 800px;
+	height: 300px;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	margin: 0 auto; /* 가로 중앙 정렬 */
+	position: relative; /* 위치 지정 */
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.cart-item {
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background-color: #fff;
+	padding: 15px;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.item-image {
+	width: 100px;
+	height: auto;
+	margin-right: 10px;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding-top: 60px;
+}
+
+.modal-content {
+	background-color: #fff;
+	margin: 5% auto;
+	padding: 20px;
+	border-radius: 5px;
+	width: 300px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-image {
+	width: 40%;
+	margin-bottom: 15px;
+	margin-left: 100px;
+}
+
+.quantity-controls {
+	display: flex;
+	align-items: center;
+	margin: 10px 0;
+}
+
+.quantity-controls button {
+	font-size: 14px;
+	padding: 5px 8px;
+	margin: 0 5px;
+}
+
+.total {
+	text-align: center;
+	font-size: 20px;
+	margin-top: 20px;
+	color: #000000;
+}
+
+button {
+	background-color: #45a049;
+	color: white;
+	border: none;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+button:hover {
+	background-color: #388e3c;
+}
+
+#empty-message {
+	text-align: center;
+	font-size: 16px;
+	color: #999;
+}
+</style>
+
+<script>
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
         let currentProductId = null;
 
@@ -261,49 +290,81 @@
 
         window.onload = updateCartDisplay;
     </script>
+
+<script
+	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
+
 <body>
-    <div class="container">
-        <h1>장바구니</h1>
-        <div id="cart-list"></div>
-        <div id="empty-message" style="display: none;">담긴 상품이 없습니다.</div>
-        <h2 class="total">총 합계: <span id="total-amount">0 원</span></h2>
-        <button onclick="completePayment()">결제하기</button>
+	<div id="wrap">
+		<div id="header">
+			<jsp:include page="header.jsp" />
+		</div>
 
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span onclick="closeModal()" style="cursor:pointer; float:right;">&times;</span>
-                <img id="modalImage" class="modal-image" src="" alt="상품 이미지">
-                <h2 id="selectedProduct">상품</h2>
-                <form id="optionsForm">
-                    <div id="coffee-options">
-                        <h3>사이즈 선택</h3>
-                        <label><input type="radio" name="size" value="S"> S</label><br>
-                        <label><input type="radio" name="size" value="M" checked> M</label><br>
-                        <label><input type="radio" name="size" value="L"> L</label><br>
+		<div id="content-wrap">
+			<div class="sub_visual bg-paik">
+				<div class="txt">
+					<h1>장바구니</h1>
+				</div>
+			</div>
+			<div class="cart_container">
+				<h1>장바구니</h1>
+				<div id="cart-list"></div>
+				<div id="empty-message" style="display: none;">담긴 상품이 없습니다.</div>
+				<h2 class="total">
+					총 합계: <span id="total-amount">0 원</span>
+				</h2>
 
-                        <h3>컵 선택</h3>
-                        <label><input type="radio" name="cup" value="일회용컵" checked> 일회용 컵 사용</label><br>
-                        <label><input type="radio" name="cup" value="다회용컵"> 다회용 컵 사용</label><br>
+				<div class="button-container"
+					style="position: absolute; bottom: 20px; left: 20px;">
+					<button onclick="completePayment()">결제하기</button>
+				</div>
+			</div>
 
-                        <h3>샷 추가</h3>
-                        <label><input type="checkbox" name="shot"> 에스프레소 샷 추가</label><br>
+			<div id="modal" class="modal">
+				<div class="modal-content">
+					<span onclick="closeModal()" style="cursor: pointer; float: right;">&times;</span>
+					<img id="modalImage" class="modal-image" src="" alt="상품 이미지">
+					<h2 id="selectedProduct">상품</h2>
+					<form id="optionsForm">
+						<div id="coffee-options">
+							<h3>사이즈 선택</h3>
+							<label><input type="radio" name="size" value="S">
+								S</label><br> <label><input type="radio" name="size"
+								value="M" checked> M</label><br> <label><input
+								type="radio" name="size" value="L"> L</label><br>
 
-                        <h3>시럽 추가</h3>
-                        <label><input type="checkbox" name="syrup"> 시럽 추가</label><br>
-                    </div>
-                    <div id="icecream-options" style="display: none;">
-                        <h3>토핑 추가</h3>
-                        <label><input type="checkbox" name="choco"> 초코 추가</label><br>
-                        <label><input type="checkbox" name="strawberry"> 딸기 추가</label><br>
-                    </div>
-                </form>
-                <div class="modal-footer">
-                    <button onclick="closeModal()">취소</button>
-                    <button onclick="submitOptions()">적용</button>
-                </div>
-            </div>
-        </div>
-    </div>
+							<h3>컵 선택</h3>
+							<label><input type="radio" name="cup" value="일회용컵"
+								checked> 일회용 컵 사용</label><br> <label><input
+								type="radio" name="cup" value="다회용컵"> 다회용 컵 사용</label><br>
+
+							<h3>샷 추가</h3>
+							<label><input type="checkbox" name="shot"> 에스프레소
+								샷 추가</label><br>
+
+							<h3>시럽 추가</h3>
+							<label><input type="checkbox" name="syrup"> 시럽 추가</label><br>
+						</div>
+						<div id="icecream-options" style="display: none;">
+							<h3>토핑 추가</h3>
+							<label><input type="checkbox" name="choco"> 초코 추가</label><br>
+							<label><input type="checkbox" name="strawberry">
+								딸기 추가</label><br>
+						</div>
+					</form>
+					<div class="modal-footer">
+						<button onclick="closeModal()">취소</button>
+						<button onclick="submitOptions()">적용</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div id="footer">
+		<jsp:include page="footer.jsp" />
+	</div>
 </body>
 </html>

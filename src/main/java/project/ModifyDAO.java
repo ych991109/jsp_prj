@@ -8,8 +8,7 @@ import kr.co.sist.dao.DbConnection;
 public class ModifyDAO {
     private static ModifyDAO mDAO;
 
-    private ModifyDAO() {
-    }
+    private ModifyDAO() {}
 
     public static ModifyDAO getInstance() {
         if (mDAO == null) {
@@ -20,10 +19,11 @@ public class ModifyDAO {
 
     private static final String INSERT_INQUIRY_SQL = 
         "INSERT INTO inquiries (type, usagePath, visitDate, notification, name, phone, email, title, content, input_date, status) VALUES (?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?, ?, ?, ?, SYSDATE, ?)";
-    
+
     private static final String UPDATE_USER_SQL = 
         "UPDATE users SET password = ?, name = ?, zipcode = ?, address = ?, address2 = ? WHERE email = ?";
 
+    // 문의 등록 메소드
     public void insertInquiry(InquiryVO inquiry) throws SQLException {
         try (Connection con = DbConnection.getInstance().getConn();
              PreparedStatement pstmt = con.prepareStatement(INSERT_INQUIRY_SQL)) {
@@ -37,7 +37,7 @@ public class ModifyDAO {
             pstmt.setString(7, inquiry.getEmail());
             pstmt.setString(8, inquiry.getTitle());
             pstmt.setString(9, inquiry.getContent());
-            pstmt.setDate(10, new java.sql.Date(inquiry.getInput_date().getTime()));
+            pstmt.setDate(10, new java.sql.Date(inquiry.getInput_date().getTime())); // Date 변환
             pstmt.setString(11, inquiry.getStatus());
 
             pstmt.executeUpdate();
@@ -46,6 +46,7 @@ public class ModifyDAO {
         }
     }
 
+    // 사용자 정보 수정 메소드
     public void updateUser(ModifyVO modifyVO) throws SQLException {
         try (Connection con = DbConnection.getInstance().getConn();
              PreparedStatement pstmt = con.prepareStatement(UPDATE_USER_SQL)) {
@@ -63,6 +64,7 @@ public class ModifyDAO {
         }
     }
 
+    // 모든 문의 가져오기 메소드
     public List<InquiryVO> getAllInquiries() throws SQLException {
         List<InquiryVO> inquiries = new ArrayList<>();
         String query = "SELECT * FROM inquiries";

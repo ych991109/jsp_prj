@@ -87,7 +87,7 @@ public class InquiryDAO {
         return inquiries;
     }
 
-    public void deleteInquiry(String inquiryId) throws SQLException {
+    public boolean deleteInquiry(String inquiryId) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         String DELETE_INQUIRY_SQL = "DELETE FROM inquiries WHERE id = ?";
@@ -102,6 +102,7 @@ public class InquiryDAO {
             if (pstmt != null) pstmt.close();
             if (con != null) con.close();
         }
+		return true;
     }
 
     public InquiryVO getInquiryById(String id) throws SQLException {
